@@ -14,17 +14,10 @@ defmodule Whitespace.Parser do
     x
   end
 
-  def parse_string(x) do
-    parse_string_acc(x, [])
-  end
+  def parse_string(x), do: parse_string_acc(x, [])
 
-  defp parse_string_acc([:C | xs], acc) do
-    { make_string(acc), xs }
-  end
-
-  defp parse_string_acc([x | xs], acc) do
-    parse_string_acc(xs, [x | acc])
-  end
+  defp parse_string_acc([:C | xs], acc), do: { make_string(acc), xs }
+  defp parse_string_acc([x | xs], acc),  do: parse_string_acc(xs, [x | acc])
 
   defp make_string([]), do: ""
   defp make_string([:A | xs]), do: (make_string(xs) <> "\s")
