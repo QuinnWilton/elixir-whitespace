@@ -14,13 +14,13 @@ defmodule ParserTest do
   end
 
   test "parse" do
-    assert parse ([:A, :A, :A, :B, :C])     == [:Push, 1]
-    assert parse ([:A, :B, :A, :A, :B, :C]) == [:Ref, 1]
-    assert parse ([:A, :B, :C, :A, :B, :C]) == [:Slide, 1]
+    assert parse([:A, :A, :A, :B, :C])     == [:Push, 1]
+    assert parse([:A, :B, :A, :A, :B, :C]) == [:Ref, 1]
+    assert parse([:A, :B, :C, :A, :B, :C]) == [:Slide, 1]
 
-    assert parse ([:A, :C, :A]) == [:Dup]
-    assert parse ([:A, :C, :B]) == [:Swap]
-    assert parse ([:A, :C, :C]) == [:Discard]
+    assert parse([:A, :C, :A]) == [:Dup]
+    assert parse([:A, :C, :B]) == [:Swap]
+    assert parse([:A, :C, :C]) == [:Discard]
 
     assert parse([:B, :A, :A, :A]) == [:InfixPlus]
     assert parse([:B, :A, :A, :B]) == [:InfixMinus]
@@ -40,7 +40,7 @@ defmodule ParserTest do
     assert parse([:C, :B, :C])     == [:Return]
     assert parse([:C, :C, :C])     == [:End]
 
-    assert parse([:B, :A, :A, :A]) == [:OutputChar]
+    assert parse([:B, :C, :A, :A]) == [:OutputChar]
     assert parse([:B, :C, :A, :B]) == [:OutputNum]
     assert parse([:B, :C, :B, :A]) == [:ReadChar]
     assert parse([:B, :C, :B, :B]) == [:ReadNum]

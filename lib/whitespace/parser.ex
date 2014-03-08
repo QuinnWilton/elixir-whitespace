@@ -6,9 +6,68 @@ defmodule Whitespace.Parser do
   def tokenize(["\n" | xs]), do: [ :C | tokenize xs ]
   def tokenize([_ | xs]),    do: tokenize(xs)
 
-  def parse(x) do
-    x
+  def parse([]), do: []
+
+  def parse([:A, :A | xs]) do
+    { number, rest } = parse_number(xs)
+    [ :Push, number | parse(rest) ]
   end
+
+  def parse([:A, :B, :A | xs]) do
+    { number, rest } = parse_number(xs)
+    [ :Ref, number | parse(rest) ]
+  end
+
+  def parse([:A, :B, :C | xs]) do
+    { number, rest } = parse_number(xs)
+    [ :Slide, number | parse(rest) ]
+  end
+
+  def parse([:A, :C, :A | xs]), do: [ :Dup     | parse(xs) ]
+  def parse([:A, :C, :B | xs]), do: [ :Swap    | parse(xs) ]
+  def parse([:A, :C, :C | xs]), do: [ :Discard | parse(xs) ]
+
+  def parse([:B, :A, :A, :A | xs]), do: [ :InfixPlus   | parse(xs) ]
+  def parse([:B, :A, :A, :B | xs]), do: [ :InfixMinus  | parse(xs) ]
+  def parse([:B, :A, :A, :C | xs]), do: [ :InfixTimes  | parse(xs) ]
+  def parse([:B, :A, :B, :A | xs]), do: [ :InfixDivide | parse(xs) ]
+  def parse([:B, :A, :B, :B | xs]), do: [ :InfixModulo | parse(xs) ]
+
+  def parse([:B, :B, :A | xs]), do: [ :Store    | parse(xs) ]
+  def parse([:B, :B, :B | xs]), do: [ :Retrieve | parse(xs) ]
+
+  def parse([:C, :A, :A | xs]) do
+    { string, rest } = parse_string(xs)
+    [ :Label, string | parse(rest) ]
+  end
+
+  def parse([:C, :A, :B | xs]) do
+    { string, rest } = parse_string(xs)
+    [ :Call, string | parse(rest) ]
+  end
+
+  def parse([:C, :A, :C | xs]) do
+    { string, rest } = parse_string(xs)
+    [ :Jump, string | parse(rest) ]
+  end
+
+  def parse([:C, :B, :A | xs]) do
+    { string, rest } = parse_string(xs)
+    [ :IfZero, string | parse(rest) ]
+  end
+
+  def parse([:C, :B, :B | xs]) do
+    { string, rest } = parse_string(xs)
+    [ :IfNegative, string | parse(rest) ]
+  end
+
+  def parse([:C, :B, :C | xs]), do: [ :Return | parse(xs) ]
+  def parse([:C, :C, :C | xs]), do: [ :End    | parse(xs) ]
+
+  def parse([:B, :C, :A, :A | xs]), do: [ :OutputChar | parse(xs) ]
+  def parse([:B, :C, :A, :B | xs]), do: [ :OutputNum  | parse(xs) ]
+  def parse([:B, :C, :B, :A | xs]), do: [ :ReadChar   | parse(xs) ]
+  def parse([:B, :C, :B, :B | xs]), do: [ :ReadNum    | parse(xs) ]
 
   def parse_number(x), do: parse_number_acc(x, [])
 
