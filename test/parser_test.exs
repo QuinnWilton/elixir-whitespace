@@ -47,7 +47,6 @@ defmodule ParserTest do
   end
 
   test "parse_number" do
-    assert parse_number([:C])   == {0, []}
     assert parse_number([:A, :C]) == {0, []}
     assert parse_number([:A, :A, :C]) == {0, []}
     assert parse_number([:A, :B, :C]) == {1, []}

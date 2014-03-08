@@ -10,9 +10,25 @@ defmodule Whitespace.Parser do
     x
   end
 
-  def parse_number(x) do
-    x
+  def parse_number(x), do: parse_number_acc(x, [])
+
+  defp parse_number_acc([:C | xs], acc), do: { make_number(acc), xs }
+  defp parse_number_acc([x | xs], acc),  do: parse_number_acc(xs, [x | acc])
+
+  defp make_number(x) do
+    cond do
+      List.last(x) == :A -> make_number_acc(drop_last(x), 1)
+      true               -> -make_number_acc(drop_last(x), 1)
+    end
   end
+
+  defp drop_last([]),       do: []
+  defp drop_last([x]),      do: []
+  defp drop_last([x | xs]), do: [ x | drop_last(xs) ]
+
+  defp make_number_acc([], _),          do: 0
+  defp make_number_acc([:A | xs], pow), do: make_number_acc(xs, pow*2)
+  defp make_number_acc([:B | xs], pow), do: (pow + make_number_acc(xs, pow*2))
 
   def parse_string(x), do: parse_string_acc(x, [])
 
