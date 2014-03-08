@@ -14,28 +14,28 @@ defmodule ParserTest do
   end
 
   test "parse" do
-    assert parse([:A, :A, :A, :B, :C])     == [:Push, 1]
-    assert parse([:A, :B, :A, :A, :B, :C]) == [:Ref, 1]
-    assert parse([:A, :B, :C, :A, :B, :C]) == [:Slide, 1]
+    assert parse([:A, :A, :A, :B, :C])     == [{:Push, 1}]
+    assert parse([:A, :B, :A, :A, :B, :C]) == [{:Ref, 1}]
+    assert parse([:A, :B, :C, :A, :B, :C]) == [{:Slide, 1}]
 
     assert parse([:A, :C, :A]) == [:Dup]
     assert parse([:A, :C, :B]) == [:Swap]
     assert parse([:A, :C, :C]) == [:Discard]
 
-    assert parse([:B, :A, :A, :A]) == [:InfixPlus]
-    assert parse([:B, :A, :A, :B]) == [:InfixMinus]
-    assert parse([:B, :A, :A, :C]) == [:InfixTimes]
-    assert parse([:B, :A, :B, :A]) == [:InfixDivide]
-    assert parse([:B, :A, :B, :B]) == [:InfixModulo]
+    assert parse([:B, :A, :A, :A]) == [{:Infix, :Plus}]
+    assert parse([:B, :A, :A, :B]) == [{:Infix, :Minus}]
+    assert parse([:B, :A, :A, :C]) == [{:Infix, :Times}]
+    assert parse([:B, :A, :B, :A]) == [{:Infix, :Divide}]
+    assert parse([:B, :A, :B, :B]) == [{:Infix, :Modulo}]
 
     assert parse([:B, :B, :A]) == [:Store]
     assert parse([:B, :B, :B]) == [:Retrieve]
 
-    assert parse([:C, :A, :A, :A, :C]) == [:Label, "\s"]
-    assert parse([:C, :A, :B, :A, :C]) == [:Call, "\s"]
-    assert parse([:C, :A, :C, :A, :C]) == [:Jump, "\s"]
-    assert parse([:C, :B, :A, :A, :C]) == [:IfZero, "\s"]
-    assert parse([:C, :B, :B, :A, :C]) == [:IfNegative, "\s"]
+    assert parse([:C, :A, :A, :A, :C]) == [{:Label, "\s"}]
+    assert parse([:C, :A, :B, :A, :C]) == [{:Call, "\s"}]
+    assert parse([:C, :A, :C, :A, :C]) == [{:Jump, "\s"}]
+    assert parse([:C, :B, :A, :A, :C]) == [{:IfZero, "\s"}]
+    assert parse([:C, :B, :B, :A, :C]) == [{:IfNegative, "\s"}]
 
     assert parse([:C, :B, :C])     == [:Return]
     assert parse([:C, :C, :C])     == [:End]
