@@ -53,12 +53,12 @@ defmodule Whitespace.Parser do
 
   def parse([:C, :B, :A | xs]) do
     { string, rest } = parse_string(xs)
-    [ {:IfZero, string} | parse(rest) ]
+    [ {:If, :Zero, string} | parse(rest) ]
   end
 
   def parse([:C, :B, :B | xs]) do
     { string, rest } = parse_string(xs)
-    [ {:IfNegative, string} | parse(rest) ]
+    [ {:If, :Negative, string} | parse(rest) ]
   end
 
   def parse([:C, :B, :C | xs]), do: [ :Return | parse(xs) ]

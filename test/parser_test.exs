@@ -1,4 +1,4 @@
-defmodule ParserTest do
+defmodule Whitespace.ParserTest do
   use ExUnit.Case
 
   import Whitespace.Parser
@@ -34,8 +34,8 @@ defmodule ParserTest do
     assert parse([:C, :A, :A, :A, :C]) == [{:Label, "\s"}]
     assert parse([:C, :A, :B, :A, :C]) == [{:Call, "\s"}]
     assert parse([:C, :A, :C, :A, :C]) == [{:Jump, "\s"}]
-    assert parse([:C, :B, :A, :A, :C]) == [{:IfZero, "\s"}]
-    assert parse([:C, :B, :B, :A, :C]) == [{:IfNegative, "\s"}]
+    assert parse([:C, :B, :A, :A, :C]) == [{:If, :Zero, "\s"}]
+    assert parse([:C, :B, :B, :A, :C]) == [{:If, :Negative, "\s"}]
 
     assert parse([:C, :B, :C])     == [:Return]
     assert parse([:C, :C, :C])     == [:End]
